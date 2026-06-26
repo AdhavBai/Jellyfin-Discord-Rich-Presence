@@ -1,14 +1,20 @@
-# Jellyfin-Discord-Rich-Presence
 # Jellyfin Discord Rich Presence (RPC)
 
-A lightweight Python script that monitors your local Jellyfin server and updates your Discord profile with a dynamic "Rich Presence" status, complete with live progress bars and official movie/TV show posters fetched from TMDb.
+A lightweight Python script that monitors your local Jellyfin server and updates your Discord profile with a dynamic "Rich Presence" status, complete with live progress bars and official movie/TV show posters fetched from TMDb. 
+
+This script features **Device ID filtering**, ensuring that only media played on your specific personal device triggers the Discord status, ignoring other users on your server.
 
 ## Prerequisites
 
 Before running this script, you need to gather a few free API keys and IDs:
 1. **Discord Client ID:** Create a new application in the [Discord Developer Portal](https://discord.com/developers/applications) and copy the Application ID. (The name of the app here is what will show up as "Playing `[Name]`" on your profile).
 2. **Jellyfin API Key:** Generate one in your Jellyfin web interface under **Dashboard** -> **API Keys**.
-3. **TMDb API Key:** Create a free account on [The Movie Database (TMDb)](https://www.themoviedb.org/), go to **Settings** -> **API**, and generate an API key. This is required to fetch the high-quality posters.
+3. **TMDb API Key:** Create a free account on [The Movie Database (TMDb)](https://www.themoviedb.org/), go to **Settings** -> **API**, and generate an API key to fetch high-quality posters.
+4. **Jellyfin Device ID:** Because recent Jellyfin versions hide the Device ID from the dashboard URL, use this network inspection method to find it:
+   * Open your Jellyfin web client in a browser, press **`F12`** (or right-click and choose **Inspect**), and select the **Network** tab.
+   * Play any video for a split second.
+   * Look at the list of network requests for a row named `Playing`, `Progress`, or `Sessions`.
+   * Click on that request, look under its **Headers** or **URL Parameters**, and locate the `DeviceId` string. Copy this long alphanumeric value.
 
 ## Setup Instructions
 
@@ -35,6 +41,7 @@ DISCORD_CLIENT_ID=your_discord_client_id_here
 JELLYFIN_URL=http://your_jellyfin_ip:8096
 JELLYFIN_API_KEY=your_jellyfin_api_key_here
 TMDB_API_KEY=your_tmdb_api_key_here
+JELLYFIN_DEVICE_ID=your_device_id_here
 ```
 
 ## Usage
@@ -44,4 +51,3 @@ Make sure the Discord desktop application is currently running on your machine, 
 ```bash
 python JellyfinDiscord.py
 ```
-
