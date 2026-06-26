@@ -10,18 +10,21 @@ DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
 JELLYFIN_LOCAL_URL = os.getenv("JELLYFIN_URL")
 JELLYFIN_API_KEY = os.getenv("JELLYFIN_API_KEY")
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+TARGET_DEVICE_ID = os.getenv("JELLYFIN_DEVICE_ID")
 #######################################################################################################
 
 def get_active_session():
-    """Fetches the active playback session from your local Jellyfin."""
+    """Fetches the active playback session strictly for a specific device."""
     headers = {"X-Emby-Token": JELLYFIN_API_KEY}
     url = f"{JELLYFIN_LOCAL_URL}/Sessions"
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         sessions = response.json()
+        
         for session in sessions:
-            if "NowPlayingItem" in session:
+            # Check if media is playing AND if the DeviceId matches your local player
+            if "NowPlayingItem" in session and session.get("DeviceId") == TARGET_DEVICE_ID:
                 return session
         return None
     except requests.exceptions.RequestException as e:
